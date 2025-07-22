@@ -1,14 +1,18 @@
-const Input = () => {
+const Input = ({ label, id, ...props }) => {
   return (
     <>
       <div>
-        <span className="block text-orange-light text-base font-semibold mb-5">
-          Full Name
-        </span>
+        <label
+          htmlFor={id}
+          className="block text-orange-light text-lg font-semibold mb-2"
+        >
+          {label}
+        </label>
         <input
-          className="w-full text-gray-light bg-glack-medium  border-none outline-none p-[10px] mb-5 font-bold transition-all duration-200 ease-in-out border-l border-transparent focus:border-l-[5px] focus:border-orange"
-          type="text"
-          placeholder="your name"
+          {...props}
+          id={id}
+          min={"5"}
+          className="w-full  text-gray-light bg-glack-medium  outline-none p-[10px]  font-bold transition-all duration-200 ease-in-out border-l border-transparent focus:border-l-[5px] focus:border-orange"
         />
       </div>
     </>
