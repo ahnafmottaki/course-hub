@@ -1,1 +1,37 @@
 @import "tailwindcss";
+@plugin 'daisyui' {
+  themes: false;
+}
+
+@theme {
+  --color-glack: #001925;
+  --color-orange: #caf438;
+  --color-orange-light: #d3f35f;
+  --color-gray-light: #87a4b6;
+  --color-glack-medium: #002733;
+  --color-glack-light: #013747;
+  --color-deep-orange: #ff7a01;
+}
+
+body {
+  @apply bg-glack text-white;
+}
+
+/* components */
+.heading {
+  @apply block text-white text-2xl font-extrabold mb-5;
+}
+
+.form-container {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    0 100%
+  );
+}
+
+.hint {
+  @apply block text-white text-base font-semibold mb-5;
+}
