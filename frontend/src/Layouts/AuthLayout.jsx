@@ -7,7 +7,7 @@ const AuthLayout = () => {
       <NavLink
         to={"/"}
         className={
-          "flex gap-2 items-center no-underline text-orange hover:text-deep-orange transition-colors duration-100"
+          "flex gap-2 items-center font-medium no-underline text-orange hover:text-deep-orange transition-colors duration-100"
         }
       >
         <FaArrowCircleLeft className="text-lg" /> Go Home

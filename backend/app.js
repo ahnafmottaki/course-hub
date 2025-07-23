@@ -2,6 +2,8 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
 
 // Importing routes
 import authRoutes from "./routes/auth.routes.js";
@@ -10,6 +12,14 @@ import notFound from "./middlewares/not-found.js";
 import errorMiddleware from "./middlewares/error.js";
 
 const app = express();
+
+// cors policy
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    credentials: true,
+  })
+);
 
 // Middlewares
 app.use(express.json());
@@ -31,6 +41,11 @@ app.use(notFound);
 app.use(errorMiddleware);
 
 // Server is running
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-});
+try {
+  await mongoose.connect(process.env.DB_URI);
+  app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
+  });
+} catch (err) {
+  console.error(err);
+}
