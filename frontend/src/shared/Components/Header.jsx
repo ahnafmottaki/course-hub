@@ -2,7 +2,7 @@ import { Link, NavLink } from "react-router";
 
 const Header = () => {
   return (
-    <header className="border border-gray-950/10 py-4 sticky top-0 left-0 z-[99999] bg-gray-50">
+    <header className="border border-gray-950/10 py-4 sticky top-0 left-0 z-[999] bg-gray-50">
       <section className=" section  flex justify-between items-center">
         {/* logo goes here */}
         <Link to={"/"}>

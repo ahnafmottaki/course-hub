@@ -1,9 +1,10 @@
 import React from "react";
+import { createPortal } from "react-dom";
 import styled from "styled-components";
 
 const Loader = () => {
-  return (
-    <div className="fixed h-full w-full top-0 left-0 grid place-items-center z-999 bg-[rgba(0,0,0,0.5)]">
+  return createPortal(
+    <div className="fixed h-full w-full top-0 left-0 grid place-items-center z-[9999] bg-[rgba(0,0,0,0.5)]">
       <StyledWrapper>
         <div>
           <div className="loader">
@@ -26,7 +27,8 @@ const Loader = () => {
           </div>
         </div>
       </StyledWrapper>
-    </div>
+    </div>,
+    document.getElementById("loading-container")
   );
 };
 

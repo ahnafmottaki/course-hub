@@ -4,18 +4,18 @@ import AppError from "../utils/AppError.js";
 
 const supportedFormats = ["image/jpg", "image/jpeg", "image/png"];
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/images");
-  },
-  filename: (req, file, cb) => {
-    const ext = file.originalname.split(".").pop();
-    cb(null, uuid() + "." + ext);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "uploads/images");
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = file.originalname.split(".").pop();
+//     cb(null, uuid() + "." + ext);
+//   },
+// });
 const multerMiddleware = () =>
   multer({
-    storage,
+    storage: multer.memoryStorage(),
     fileFilter(req, file, cb) {
       const isDesiredFormat = supportedFormats.includes(file.mimetype);
       if (isDesiredFormat) {
@@ -28,7 +28,7 @@ const multerMiddleware = () =>
       }
     },
     limits: {
-      fileSize: 5 * 1024 * 1024,
+      fileSize: 2 * 1024 * 1024,
     },
   });
 

@@ -4,9 +4,10 @@ import multerMiddleware from "../middlewares/multer.js";
 import { body } from "express-validator";
 const router = express.Router();
 
+// api/auth/register
 router.post(
   "/register",
-  multerMiddleware().single("profilePic"),
+  multerMiddleware().single("image"),
   [
     body("name").trim().notEmpty().isLength({
       min: 6,
