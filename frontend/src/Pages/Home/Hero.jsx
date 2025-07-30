@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 const ShuffledHeroSection = () => {
   return (
-    <section className=" section grid grid-cols-1 md:grid-cols-2 items-center gap-8 ">
+    <section className=" section py-16 grid grid-cols-1 md:grid-cols-2 items-center gap-8 ">
       <div>
         <span className="hint">Better every day</span>
         <h3 className="primary-heading">

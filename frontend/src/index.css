@@ -14,9 +14,8 @@
 html {
   @apply bg-background text-text font-open-sans;
 }
-
 .section {
-  @apply px-4 sm:px-8 py-12 w-full max-w-6xl mx-auto;
+  @apply px-4 sm:px-8 w-full max-w-6xl mx-auto;
 }
 
 .hint {
@@ -29,4 +28,8 @@ html {
 
 .primary-button {
   @apply bg-indigo-500 font-pt-sans text-white font-medium py-2 px-4 rounded transition-all hover:bg-indigo-600 active:scale-95;
+}
+
+.secondary-button {
+  @apply bg-amber-500 font-pt-sans text-white font-medium py-2 px-4 rounded transition-all hover:bg-amber-600 active:scale-95;
 }
