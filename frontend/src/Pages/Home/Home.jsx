@@ -1,5 +1,11 @@
+import ShuffledHeroSection from "./Hero";
+
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <>
+      <ShuffledHeroSection />
+    </>
+  );
 };
 
 export default Home;

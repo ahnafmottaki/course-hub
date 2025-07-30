@@ -1,11 +1,11 @@
 import { Outlet } from "react-router";
-import MainNavigation from "../shared/Components/MainNavigation";
 import Footer from "../shared/Components/Footer";
+import Header from "../shared/Components/Header";
 
 const RootLayout = () => {
   return (
     <>
-      <MainNavigation />
+      <Header />
       <Outlet />
       <Footer />
     </>

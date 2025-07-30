@@ -1,65 +1,32 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap");
 @import "tailwindcss";
-@plugin 'daisyui' {
-  themes: false;
-}
 
 @theme {
-  --color-glack: #001925;
-  --color-orange: #caf438;
-  --color-orange-light: #d3f35f;
-  --color-gray-light: #87a4b6;
-  --color-glack-medium: #002733;
-  --color-glack-light: #013747;
-  --color-deep-orange: #ff7a01;
+  --color-text: #040316;
+  --color-background: #fbfbfe;
+  --color-primary: #2f27ce;
+  --color-secondary: #dddbff;
+  --color-accent: #443dff;
 
-  --font-merriweather: "Merriweather", serif;
-  --font-inter: "Inter", sans-serif;
+  --font-pt-sans: "PT Sans", sans-serif;
+  --font-open-sans: "Open Sans", sans-serif;
 }
 
 html {
-  @apply bg-glack text-white font-inter;
+  @apply bg-background text-text font-open-sans;
 }
 
-/* components */
-
-.link {
-  @apply text-orange;
-}
-.heading {
-  @apply block text-white  text-2xl md:text-3xl font-extrabold font-merriweather;
-}
-
-.form-container {
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 20px),
-    calc(100% - 20px) 100%,
-    0 100%
-  );
+.section {
+  @apply px-4 sm:px-8 py-12 w-full max-w-6xl mx-auto;
 }
 
 .hint {
-  @apply block text-white text-base font-semibold mb-5;
+  @apply block mb-4 text-xs md:text-sm text-indigo-500 font-medium;
 }
 
-.textarea {
-  @apply w-full p-[10px]  outline-none bg-glack-light text-orange font-bold resize-none max-h-[150px] mb-5 border-l border-transparent transition-all duration-200 ease-in-out focus:border-l-[5px] focus:border-orange;
+.primary-heading {
+  @apply text-4xl md:text-6xl font-pt-sans font-semibold;
 }
 
-.primary-btn {
-  @apply font-merriweather cursor-pointer basis-[70%] bg-orange p-[10px] text-glack text-center font-bold border border-transparent transition-all duration-200 ease-in-out hover:bg-transparent hover:border-deep-orange hover:text-orange;
-}
-
-.secondary-btn {
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 10px),
-    calc(100% - 10px) 100%,
-    0 100%
-  );
-
-  @apply relative text-center p-[10px] text-orange font-bold bg-glack transition-all duration-200 ease-in-out hover:bg-orange hover:text-glack;
+.primary-button {
+  @apply bg-indigo-500 font-pt-sans text-white font-medium py-2 px-4 rounded transition-all hover:bg-indigo-600 active:scale-95;
 }
