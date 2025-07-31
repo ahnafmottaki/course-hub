@@ -4,6 +4,9 @@ import axiosInstance from "../../config/axiosInstance";
 import { showSuccessOrError } from "../../utils/sweetAlert2";
 import { toast } from "react-toastify";
 import { removeUser } from "../../store/slices/auth-slice";
+import Drawer from "./Drawer.jsx";
+import MobileLinks from "./Header/MobileLinks.jsx";
+import MobileButton from "./Header/MenuButton.jsx";
 
 const NavigationLink = ({ path, children }) => {
   return (
@@ -42,11 +45,21 @@ const Header = () => {
     <header className="border border-gray-950/10 py-4 sticky top-0 left-0 z-[999] bg-gray-50">
       <section className=" section  flex justify-between items-center">
         {/* logo goes here */}
-        <Link to={"/"}>
-          <div className="font-pt-sans font-bold text-2xl">CourseHub</div>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Drawer
+            onButtonRender={(setOpen) => (
+              <MobileButton onClickFn={() => setOpen(true)} />
+            )}
+          >
+            <MobileLinks />
+          </Drawer>
+          <Link to={"/"}>
+            <div className="font-pt-sans font-bold text-2xl">CourseHub</div>
+          </Link>
+        </div>
+
         {/* now comes the links */}
-        <nav>
+        <nav className="hidden md:block">
           <ul className="flex items-center gap-5">
             <li>
               <NavigationLink path={"/"}>Home</NavigationLink>
