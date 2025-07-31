@@ -3,6 +3,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 // Importing routes
 import authRoutes from "./routes/auth.routes.js";
@@ -22,6 +23,7 @@ app.use(
 
 // Middlewares
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/api/healthCheck", (req, res) => {
   res.status(200).json({

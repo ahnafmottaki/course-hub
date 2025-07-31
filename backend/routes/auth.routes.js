@@ -1,5 +1,9 @@
 import express from "express";
-import { register } from "../controllers/auth.controller.js";
+import {
+  postRegister,
+  postLogout,
+  postLogin,
+} from "../controllers/auth.controller.js";
 import multerMiddleware from "../middlewares/multer.js";
 import { body } from "express-validator";
 const router = express.Router();
@@ -25,7 +29,29 @@ router.post(
       max: 18,
     }),
   ],
-  register
+  postRegister
 );
+
+// api/auth/login
+router.post(
+  "/login",
+  [
+    body("email")
+      .trim()
+      .notEmpty()
+      .toLowerCase()
+      .custom((value) => {
+        return /^[a-zA-Z][a-zA-Z0-9._]*@gmail.com$/.test(value);
+      }),
+    body("password").trim().notEmpty().isLength({
+      min: 6,
+      max: 18,
+    }),
+  ],
+  postLogin
+);
+
+//api/auth/logout
+router.post("/logout", postLogout);
 
 export default router;

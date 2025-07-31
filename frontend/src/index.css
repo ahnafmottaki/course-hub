@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-.animate__animated.animate__fadeInUp {
+.hero-animation {
   --animate-duration: 1s;
   --animate-delay: 0.1s;
 }
