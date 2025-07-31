@@ -5,6 +5,7 @@ import { RouterProvider } from "react-router";
 import router from "./router/router";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import "animate.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

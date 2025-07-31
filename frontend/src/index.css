@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+.animate__animated.animate__fadeInUp {
+  --animate-duration: 1s;
+  --animate-delay: 0.1s;
+}
+
 @theme {
   --color-text: #040316;
   --color-background: #fbfbfe;

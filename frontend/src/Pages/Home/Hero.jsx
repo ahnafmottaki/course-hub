@@ -6,14 +6,16 @@ const ShuffledHeroSection = () => {
     <section className=" section py-16 grid grid-cols-1 md:grid-cols-2 items-center gap-8 ">
       <div>
         <span className="hint">Better every day</span>
-        <h3 className="primary-heading">
+        <h3 className="primary-heading animate__animated animate__fadeInUp">
           Build up your career with Course Hub
         </h3>
-        <p className="text-base md:text-lg text-slate-700 my-4 md:my-6">
+        <p className="text-base md:text-lg text-slate-700 my-4 md:my-6 animate__animated animate__fadeInUp animate__delay-2s">
           Build up your future with Course Hub. The best course platform
           available in the internet. Get every course in one place.
         </p>
-        <button className="primary-button">Find a course</button>
+        <button className="primary-button animate__animated animate__fadeInUp animate__delay-4s">
+          Find a course
+        </button>
       </div>
       <ShuffleGrid />
     </section>

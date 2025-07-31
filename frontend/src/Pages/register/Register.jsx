@@ -6,6 +6,7 @@ import useTrimmedFrom from "../../hooks/useTrimmedForm";
 import axios from "axios";
 import Loader from "../../shared/UiElements/Loader";
 import { toast } from "react-toastify";
+import { showSuccessOrError } from "../../utils/sweetAlert2";
 
 const Register = () => {
   const {
@@ -32,10 +33,11 @@ const Register = () => {
       await axios.post("http://localhost:3000/api/auth/register", formData);
       toast.success("Register successful!");
     } catch (err) {
-      console.log(err);
-      toast.error(
-        err.response?.data?.message || "Something unexpected happened!"
-      );
+      showSuccessOrError({
+        type: "error",
+        title: "Oops..",
+        message: err.response?.data?.message || "Something went wrong",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -45,7 +47,7 @@ const Register = () => {
     <>
       <section className="section  min-h-[calc(100dvh-66px)]  flex justify-center items-center">
         <div className="max-w-md w-full min-w-xs">
-          <h1 className="text-4xl font-bold text-indigo-600 text-center mb-5">
+          <h1 className="text-4xl font-bold text-indigo-600 text-center mb-5 animate__animated animate__slideInRight">
             Signin To CourseHub
           </h1>
           <form className="space-y-4" onSubmit={handleSubmit(onFormSubmit)}>
