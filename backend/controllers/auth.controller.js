@@ -41,8 +41,8 @@ export const postRegister = asyncHandler(async (req, res, next) => {
     profilePic,
     role: "student",
   }).save();
-  const payload = { userId: user.id, role: user.role };
-  const accessToken = jwt.sign(payload, process.env.JTW_SECRET, {
+  const payload = { userId: user._id, role: user.role };
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
 
@@ -77,7 +77,6 @@ export const postLogin = asyncHandler(async (req, res, next) => {
     return next(new AppError(errorMessage, 400));
   }
   const data = matchedData(req);
-  console.log(data);
   const user = await User.findOne({ email: data.email });
   if (!user) {
     return next(new AppError("User doesn't exists", 400));
@@ -85,10 +84,10 @@ export const postLogin = asyncHandler(async (req, res, next) => {
 
   const isValidPassword = bcrypt.compare(data.password, user.password);
   if (!isValidPassword) {
-    return next(new AppError("Invalid Email or Password!", 401));
+    return next(new AppError("Invalid Email or Password!", 400));
   }
-  const payload = { userId: user.id, role: user.role };
-  const accessToken = jwt.sign(payload, process.env.JTW_SECRET, {
+  const payload = { userId: user._id, role: user.role };
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
 
@@ -105,4 +104,16 @@ export const postLogin = asyncHandler(async (req, res, next) => {
     name: user.name,
   };
   new ApiResponse(200, "Login Successful", resData).send(res);
+});
+
+export const getIsUser = asyncHandler(async (req, res, next) => {
+  console.log(req.user);
+  const user = await User.findOne({ _id: req.user.userId });
+  console.log(user);
+  new ApiResponse(200, "User is available", {
+    userId: user.id,
+    role: user.role,
+    profilePic: user.profilePic,
+    name: user.name,
+  }).send(res);
 });

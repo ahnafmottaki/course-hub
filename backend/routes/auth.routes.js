@@ -3,9 +3,12 @@ import {
   postRegister,
   postLogout,
   postLogin,
+  getIsUser,
 } from "../controllers/auth.controller.js";
 import multerMiddleware from "../middlewares/multer.js";
 import { body } from "express-validator";
+import verifyToken from "../middlewares/verifyToken.js";
+
 const router = express.Router();
 
 // api/auth/register
@@ -53,5 +56,8 @@ router.post(
 
 //api/auth/logout
 router.post("/logout", postLogout);
+
+//api/auth/isUser
+router.get("/isUser", verifyToken, getIsUser);
 
 export default router;
