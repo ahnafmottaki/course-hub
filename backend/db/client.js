@@ -10,6 +10,4 @@ const client = new MongoClient(uri, {
   },
 });
 
-const db = client.db("course-hub");
-export { db };
-export default () => client.connect();
+export default client;

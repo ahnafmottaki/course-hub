@@ -12,7 +12,7 @@ const RootLayout = () => {
   useEffect(() => {
     (async function () {
       try {
-        const response = await axiosInstance.get("/auth/isUser");
+        const response = await axiosInstance.post("/auth/isUser");
         if (response.data.success) {
           dispatch(setUser(response.data.data));
         }

@@ -5,14 +5,19 @@ import AppError from "../utils/AppError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResonse.js";
 import cloudinary from "../config/cloudinary.js";
-import { db } from "../db/mongodb.init.js";
 import User from "../models/User.model.js";
+
+const cookieSettings = {
+  httpOnly: true,
+  sameSite: "lax",
+  secure: process.env.NODE_ENV === "production",
+};
 
 export const postRegister = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const firstErrorMessage = errors[0].msg.split(" ")[0] + errors[0].path;
-    return next(new AppError(firstErrorMessage, 400));
+    const errorMessage = errors.array()[0]?.msg || "Validation Error";
+    return next(new AppError(errorMessage, 400));
   }
   const data = matchedData(req);
   const doesUserExist = await User.findByEmail(data.email);
@@ -21,6 +26,7 @@ export const postRegister = asyncHandler(async (req, res, next) => {
       new AppError("User with this email address already exists", 409)
     );
   }
+  let profilePublicId;
   const profilePic = await new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       { folder: "coursehub_uploads" },
@@ -28,18 +34,25 @@ export const postRegister = asyncHandler(async (req, res, next) => {
         if (error) {
           return reject(new AppError("Upload Failed", 500));
         }
+        profilePublicId = result.public_id;
         resolve(result.secure_url);
       }
     );
     uploadStream.end(req.file.buffer);
   });
-  console.log(data, "profilePic", profilePic);
-  const user = await new User({
-    email: data.email,
-    password: data.password,
-    profilePic,
-    name: data.name,
-  }).save();
+  let user;
+  try {
+    user = await new User({
+      email: data.email,
+      password: data.password,
+      profilePic,
+      name: data.name,
+    }).save();
+  } catch (err) {
+    await cloudinary.uploader.destroy(profilePublicId);
+    return next(new AppError("Server Error , Try Again Later", 500));
+  }
+
   const payload = { userId: user._id, role: user.role };
   const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "1h",
@@ -47,9 +60,7 @@ export const postRegister = asyncHandler(async (req, res, next) => {
 
   res.cookie("token", accessToken, {
     maxAge: 1 * 60 * 60 * 1000,
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    ...cookieSettings,
   });
   const resData = {
     ...payload,
@@ -59,57 +70,52 @@ export const postRegister = asyncHandler(async (req, res, next) => {
   new ApiResponse(201, "Sign In Successful", resData).send(res);
 });
 
-// export const postLogout = asyncHandler(async (req, res) => {
-//   res.clearCookie("token", {
-//     httpOnly: true,
-//     sameSite: "lax",
-//     secure: process.env.NODE_ENV === "production",
-//   });
-//   new ApiResponse(200, "Logout successful", null).send(res);
-// });
+export const postLogout = asyncHandler(async (req, res) => {
+  res.clearCookie("token", {
+    ...cookieSettings,
+  });
+  new ApiResponse(200, "Logout successful", null).send(res);
+});
 
-// export const postLogin = asyncHandler(async (req, res, next) => {
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     const errorMessage = errors[0].msg.split(" ")[0] + errors[0].path;
-//     return next(new AppError(errorMessage, 400));
-//   }
-//   const data = matchedData(req);
-//   const user = await User.findOne({ email: data.email });
-//   if (!user) {
-//     return next(new AppError("User doesn't exists", 400));
-//   }
+export const postLogin = asyncHandler(async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const errorMessage = errors.array()[0]?.msg || "Validation Error";
+    return next(new AppError(errorMessage, 400));
+  }
+  const data = matchedData(req);
+  const user = await User.getCollection().findOne({ email: data.email });
+  if (!user) {
+    return next(new AppError("User doesn't exists", 400));
+  }
 
-//   const isValidPassword = bcrypt.compare(data.password, user.password);
-//   if (!isValidPassword) {
-//     return next(new AppError("Invalid Email or Password!", 400));
-//   }
-//   const payload = { userId: user._id, role: user.role };
-//   const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-//     expiresIn: "1h",
-//   });
+  const isValidPassword = await bcrypt.compare(data.password, user.password);
+  if (!isValidPassword) {
+    return next(new AppError("Invalid Email or Password!", 400));
+  }
+  const payload = { userId: user._id, role: user.role };
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: "1h",
+  });
 
-//   res.cookie("token", accessToken, {
-//     maxAge: 1 * 60 * 60 * 1000,
-//     httpOnly: true,
-//     sameSite: "lax",
-//     secure: process.env.NODE_ENV === "production",
-//   });
-//   const resData = {
-//     userId: user.id,
-//     role: user.role,
-//     profilePic: user.profilePic,
-//     name: user.name,
-//   };
-//   new ApiResponse(200, "Login Successful", resData).send(res);
-// });
+  res.cookie("token", accessToken, {
+    maxAge: 1 * 60 * 60 * 1000,
+    ...cookieSettings,
+  });
+  const resData = {
+    ...payload,
+    profilePic: user.profilePic,
+    name: user.name,
+  };
+  new ApiResponse(200, "Login Successful", resData).send(res);
+});
 
-// export const getIsUser = asyncHandler(async (req, res, next) => {
-//   const user = await User.findOne({ _id: req.user.userId });
-//   new ApiResponse(200, "User is available", {
-//     userId: user.id,
-//     role: user.role,
-//     profilePic: user.profilePic,
-//     name: user.name,
-//   }).send(res);
-// });
+export const postIsUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.userId);
+  new ApiResponse(200, "User is available", {
+    userId: user.id,
+    role: user.role,
+    profilePic: user.profilePic,
+    name: user.name,
+  }).send(res);
+});

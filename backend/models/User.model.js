@@ -1,62 +1,7 @@
 import { ObjectId } from "mongodb";
-import { db } from "../db/mongodb.init.js";
+import db from "../db/db.js";
 import AppError from "../utils/AppError.js";
 import bcrypt from "bcryptjs";
-
-db.createCollection("users", {
-  validator: {
-    $jsonSchema: {
-      bsonType: "object",
-      required: [
-        "name",
-        "email",
-        "password",
-        "profilePic",
-        "role",
-        "createdAt",
-        "updatedAt",
-      ],
-      properties: {
-        _id: {
-          bsonType: "objectId",
-        },
-        name: {
-          bsonType: "string",
-          description: "must be a string and is required",
-          minLength: 6,
-          maxLength: 20,
-        },
-        email: {
-          bsonType: "string",
-          pattern: "^[a-zA-Z][a-zA-Z0-9._-]*@gmail.com$",
-          description: "must be a string and is required",
-        },
-        password: {
-          bsonType: "string",
-          minLength: 6,
-          description: "must be a string and is required",
-        },
-        profilePic: {
-          bsonType: "string",
-          description: "must be a string and is required",
-        },
-        role: {
-          bsonType: "string",
-          enum: ["admin", "instructor", "student"],
-          description: "must be a string and is required",
-        },
-        createdAt: {
-          bsonType: "date",
-          description: "must be a date and is required",
-        },
-        updatedAt: {
-          bsonType: "date",
-          description: "must be a date and is required",
-        },
-      },
-    },
-  },
-});
 
 class User {
   constructor({ name, email, password, profilePic }) {
@@ -69,17 +14,17 @@ class User {
     this.updatedAt = new Date();
   }
 
-  toDocument() {
-    return {
-      name: this.name,
-      email: this.email,
-      password: this.password,
-      profilePic: this.profilePic,
-      role: this.role,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
-  }
+  // toDocument() {
+  //   return {
+  //     name: this.name,
+  //     email: this.email,
+  //     password: this.password,
+  //     profilePic: this.profilePic,
+  //     role: this.role,
+  //     createdAt: this.createdAt,
+  //     updatedAt: this.updatedAt,
+  //   };
+  // }
 
   async save() {
     this.password = await bcrypt.hash(this.password, 12);
@@ -90,7 +35,8 @@ class User {
       throw new AppError("User creation failed");
     }
     this._id = insertResponse.insertedId;
-    return this;
+    const { password, ...userData } = this;
+    return userData;
   }
 
   // * static method goes below this
@@ -98,14 +44,20 @@ class User {
   // find methods
   static findByEmail(email) {
     if (!email) throw new AppError("Invalid Email!");
-    return User.getCollection().findOne({ email });
+    return User.getCollection().findOne(
+      { email },
+      { projection: { password: 0 } }
+    );
   }
 
   static async findById(id) {
     if (!id || !ObjectId.isValid(id)) {
       throw new AppError("Invalid Id parameter", 400);
     }
-    return User.getCollection().findOne({ _id: new ObjectId(id) });
+    return User.getCollection().findOne(
+      { _id: new ObjectId(id) },
+      { projection: { password: 0 } }
+    );
   }
 
   static getCollection() {

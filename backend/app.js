@@ -5,7 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 // importing db
-import mongoConnect from "./db/mongodb.init.js";
+import mongoConnect from "./db/init.js";
 // Importing routes
 import authRoutes from "./routes/auth.routes.js";
 // Importing middlewares
@@ -43,8 +43,8 @@ app.use(notFound);
 app.use(errorMiddleware);
 
 // Server is running
-mongoConnect().then(() =>
+mongoConnect(() => {
   app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
-  })
-);
+  });
+});
