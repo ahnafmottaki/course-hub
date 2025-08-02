@@ -2,9 +2,10 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
+// importing db
+import mongoConnect from "./db/mongodb.init.js";
 // Importing routes
 import authRoutes from "./routes/auth.routes.js";
 // Importing middlewares
@@ -42,11 +43,8 @@ app.use(notFound);
 app.use(errorMiddleware);
 
 // Server is running
-try {
-  await mongoose.connect(process.env.DB_URI);
+mongoConnect().then(() =>
   app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
-  });
-} catch (err) {
-  console.error(err);
-}
+  })
+);

@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router";
 
 const MobileLink = ({ path, children }) => {
@@ -16,12 +17,18 @@ const MobileLink = ({ path, children }) => {
 };
 
 const MobileLinks = () => {
+  const { isLoggedIn } = useSelector((state) => state.auth);
+
   return (
     <>
       <MobileLink path={"/"}>Home</MobileLink>
       <MobileLink path={"/courses"}>Courses</MobileLink>
-      <MobileLink path={"my-courses"}>My Courses</MobileLink>
-      <MobileLink path={"/my-profile"}>My Profile</MobileLink>
+      {isLoggedIn && (
+        <>
+          <MobileLink path={"my-courses"}>My Courses</MobileLink>
+          <MobileLink path={"/my-profile"}>My Profile</MobileLink>
+        </>
+      )}
     </>
   );
 };

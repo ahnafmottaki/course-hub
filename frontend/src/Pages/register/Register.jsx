@@ -64,7 +64,7 @@ const Register = () => {
             {...register("name", {
               required: true,
               minLength: 4,
-              maxLength: 18,
+              maxLength: 20,
             })}
           />
           <FileInput
