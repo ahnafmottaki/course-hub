@@ -1,5 +1,5 @@
 import client from "./client.js";
-import setUpCollections from "../schemaValidators/setUpCollections.js";
+import setUpCollections from "../SchemaValidators/setUpCollections.js";
 
 const mongoConnect = async (cb) => {
   try {

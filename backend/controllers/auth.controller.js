@@ -111,9 +111,11 @@ export const postLogin = asyncHandler(async (req, res, next) => {
 });
 
 export const postIsUser = asyncHandler(async (req, res, next) => {
+  console.log(req.user);
   const user = await User.findById(req.user.userId);
+  console.log(user);
   new ApiResponse(200, "User is available", {
-    userId: user.id,
+    userId: user._id,
     role: user.role,
     profilePic: user.profilePic,
     name: user.name,

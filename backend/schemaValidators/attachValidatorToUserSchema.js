@@ -37,6 +37,7 @@ const attachValidatorToUserSchema = async () => {
             },
             profilePic: {
               bsonType: "string",
+              pattern: "^https?:\\/\\/.+\\.(jpg|jpeg|png)$",
               description: "must be a string and is required",
             },
             role: {
@@ -54,6 +55,7 @@ const attachValidatorToUserSchema = async () => {
             },
           },
         },
+        additionalProperties: false,
       },
     });
   } catch (error) {
